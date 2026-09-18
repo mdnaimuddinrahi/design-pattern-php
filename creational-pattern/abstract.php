@@ -4,9 +4,16 @@
  * The abstract factory pattern is a creational design pattern that lets
  * you produce families of related or dependent objects without specifying
  * their concrete classes.
- * 
+ *  | Factory                         | Abstract Factory                   |
+    | ------------------------------- | ---------------------------------- |
+    | Creates a product               | Creates multiple related products  |
+    | Usually one product family/type | Entire product family              |
+    | `create()` / similar            | Multiple creation methods          |
+    | Focuses on **one product**      | Focuses on **compatible products** |
+    | Example: Payment                | Example: Payment + Refund          |
+
  */
-interface Payment 
+interface Payment
 {
     public function pay(float $amount): void;
 }
@@ -50,13 +57,13 @@ class PayPalRefund implements Refund
 
 interface PaymentFactory
 {
-    public function createPayment(): Payment;
+    public function create(): Payment;
     public function createRefund(): Refund;
 }
 
 class StripeFactory implements PaymentFactory
 {
-    public function createPayment(): Payment
+    public function create(): Payment
     {
         return new StripePayment();
     }
@@ -70,7 +77,7 @@ class StripeFactory implements PaymentFactory
 
 class PayPalFactory implements PaymentFactory
 {
-    public function createPayment(): Payment
+    public function create(): Payment
     {
         return new PayPalPayment();
     }
@@ -89,7 +96,7 @@ class PayPalFactory implements PaymentFactory
 
 function checkout(PaymentFactory $factory): void
 {
-    $payment = $factory->createPayment();
+    $payment = $factory->create();
 
     $payment->pay(100);
 
